@@ -147,11 +147,11 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 - [x] Eyeball results against a real document before touching the LLM
 
 ### H3 — Answering (1h30)
-- [ ] System prompt: cite inline per claim, abstain when insufficient, state assumptions on ambiguity
-- [ ] `LLMClient` streaming against lexora
-- [ ] SSE endpoint wiring the events above
-- [ ] **Citation parsing + server-side validation** (drop out-of-range markers)
-- [ ] Log to `queries`
+- [x] System prompt: cite inline per claim, abstain when insufficient, state assumptions on ambiguity
+- [x] `LLMClient` streaming against lexora
+- [x] SSE endpoint wiring the events above
+- [x] **Citation parsing + server-side validation** (drop out-of-range markers)
+- [x] Log to `queries`
 
 ### H4 — Frontend (1h45)
 - [ ] Three-pane shell; upload with drag-drop + status polling

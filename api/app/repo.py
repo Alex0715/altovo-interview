@@ -152,3 +152,39 @@ async def get_summary(conn: asyncpg.Connection, document_id: UUID) -> DocumentSu
 async def delete_document(conn: asyncpg.Connection, document_id: UUID) -> bool:
     result = await conn.execute("DELETE FROM documents WHERE id = $1", document_id)
     return result == "DELETE 1"
+
+
+async def log_query(
+    conn: asyncpg.Connection,
+    *,
+    question: str,
+    answer: str | None,
+    retrieved_ids: list[UUID],
+    cited_ids: list[UUID],
+    abstained: bool,
+    abstain_reason: str | None,
+    latency_ms: int,
+    prompt_tokens: int,
+    output_tokens: int,
+) -> None:
+    """Observability, not the critical path: makes 'is it fast / what does
+    it cost / how often do we abstain' measured questions (ARCHITECTURE.md
+    §6) instead of estimates."""
+    await conn.execute(
+        """
+        INSERT INTO queries (
+            question, answer, retrieved_ids, cited_ids,
+            abstained, abstain_reason, latency_ms, prompt_tokens, output_tokens
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        """,
+        question,
+        answer,
+        retrieved_ids,
+        cited_ids,
+        abstained,
+        abstain_reason,
+        latency_ms,
+        prompt_tokens,
+        output_tokens,
+    )
