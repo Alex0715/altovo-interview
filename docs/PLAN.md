@@ -154,11 +154,11 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 - [x] Log to `queries`
 
 ### H4 — Frontend (1h45)
-- [ ] Three-pane shell; upload with drag-drop + status polling
-- [ ] Streaming chat rendering; citation markers → clickable chips
-- [ ] Source viewer: fetch `full_text`, scroll to and highlight `char_start..char_end`
-- [ ] Distinct rendering for abstention; per-source score display
-- [ ] `/health` ping on mount
+- [x] Three-pane shell; upload with drag-drop + status polling
+- [x] Streaming chat rendering; citation markers → clickable chips
+- [x] Source viewer: fetch `full_text`, scroll to and highlight `char_start..char_end`
+- [x] Distinct rendering for abstention; per-source score display
+- [x] `/health` ping on mount
 
 ### H5 — Eval + hardening (45m)
 - [ ] 10 eval questions incl. 2 unanswerable and 1 acronym/identifier case
