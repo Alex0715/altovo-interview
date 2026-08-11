@@ -142,9 +142,9 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 - [x] Sanity check: offsets round-trip — slice `full_text[char_start:char_end]` and confirm it equals `content`
 
 ### H2 — Retrieval (1h)
-- [ ] Single SQL statement: dense top-20 ∪ lexical top-20, RRF fused, top-8 out
-- [ ] Retrieval floor check for the abstain path
-- [ ] Eyeball results against a real document before touching the LLM
+- [x] Single SQL statement: dense top-20 ∪ lexical top-20, RRF fused, top-8 out
+- [x] Retrieval floor check for the abstain path
+- [x] Eyeball results against a real document before touching the LLM
 
 ### H3 — Answering (1h30)
 - [ ] System prompt: cite inline per claim, abstain when insufficient, state assumptions on ambiguity
