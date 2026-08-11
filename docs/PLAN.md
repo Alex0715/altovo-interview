@@ -135,11 +135,11 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 *Nothing else starts until this round trip works.*
 
 ### H1 — Ingestion (1h15)
-- [ ] `POST /documents`: pypdf / plain text / markdown → per-page text
-- [ ] Paragraph-packing chunker, ~700 tokens / ~100 overlap, tracking page + char offsets
-- [ ] `Embedder` (OpenAI, batched, content-hash cache) → write chunks
-- [ ] Status transitions and the scanned-PDF rejection path
-- [ ] Sanity check: offsets round-trip — slice `full_text[char_start:char_end]` and confirm it equals `content`
+- [x] `POST /documents`: pypdf / plain text / markdown → per-page text
+- [x] Paragraph-packing chunker, ~700 tokens / ~100 overlap, tracking page + char offsets
+- [x] `Embedder` (OpenAI, batched, content-hash cache) → write chunks
+- [x] Status transitions and the scanned-PDF rejection path
+- [x] Sanity check: offsets round-trip — slice `full_text[char_start:char_end]` and confirm it equals `content`
 
 ### H2 — Retrieval (1h)
 - [ ] Single SQL statement: dense top-20 ∪ lexical top-20, RRF fused, top-8 out

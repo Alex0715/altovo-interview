@@ -1,12 +1,16 @@
 import os
 from contextlib import asynccontextmanager
+from uuid import UUID
 
 import httpx
-from fastapi import FastAPI
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+from . import repo
 from .config import get_settings
 from .db import close_pool, create_pool, get_pool
+from .ingest import detect_mime_type, ingest_document
+from .models import DocumentDetail, DocumentSummary
 from .providers.embeddings import Embedder
 from .providers.llm import LLMClient
 
@@ -51,6 +55,56 @@ async def health() -> dict:
 
     healthy = all(v == "ok" for v in checks.values())
     return {"status": "ok" if healthy else "degraded", "checks": checks}
+
+
+@app.post("/documents", status_code=201)
+async def create_document(file: UploadFile = File(...)) -> DocumentSummary:
+    settings = get_settings()
+    data = await file.read()
+    if len(data) > settings.max_upload_bytes:
+        raise HTTPException(413, "file exceeds max upload size")
+
+    filename = file.filename or "untitled"
+    mime_type = detect_mime_type(filename, file.content_type)
+    if mime_type is None:
+        raise HTTPException(415, f"unsupported file type: {filename}")
+
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        document_id = await repo.create_document(
+            conn, filename=filename, mime_type=mime_type, byte_size=len(data)
+        )
+
+    # Synchronous, on the upload request (ARCHITECTURE.md §3). Never raises —
+    # failures land as status='failed' on the document row.
+    await ingest_document(pool, app.state.embedder, document_id, mime_type, data)
+
+    async with pool.acquire() as conn:
+        summary = await repo.get_summary(conn, document_id)
+    return summary
+
+
+@app.get("/documents")
+async def list_documents() -> list[DocumentSummary]:
+    async with get_pool().acquire() as conn:
+        return await repo.list_documents(conn)
+
+
+@app.get("/documents/{document_id}")
+async def get_document(document_id: UUID) -> DocumentDetail:
+    async with get_pool().acquire() as conn:
+        doc = await repo.get_document(conn, document_id)
+    if doc is None:
+        raise HTTPException(404, "document not found")
+    return doc
+
+
+@app.delete("/documents/{document_id}", status_code=204)
+async def delete_document(document_id: UUID) -> None:
+    async with get_pool().acquire() as conn:
+        deleted = await repo.delete_document(conn, document_id)
+    if not deleted:
+        raise HTTPException(404, "document not found")
 
 
 if __name__ == "__main__":
