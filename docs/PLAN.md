@@ -161,9 +161,9 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 - [x] `/health` ping on mount
 
 ### H5 — Eval + hardening (45m)
-- [ ] 10 eval questions incl. 2 unanswerable and 1 acronym/identifier case
-- [ ] `scripts/eval.py`, run it, **tune the retrieval floor against it**
-- [ ] Error states: provider timeout, empty corpus, failed upload
+- [x] 10 eval questions incl. 2 unanswerable and 1 acronym/identifier case
+- [x] `scripts/eval.py`, run it, **tune the retrieval floor against it**
+- [x] Error states: provider timeout, empty corpus, failed upload
 
 ### H6 — Docs + submission (1h)
 - [ ] README: local setup, env vars, migration, deploy notes

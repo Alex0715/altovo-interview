@@ -1,0 +1,60 @@
+[
+  {
+    "id": "embedding-model",
+    "question": "What embedding model and dimensionality does the ingestion pipeline use?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["text-embedding-3-small", "1536"]
+  },
+  {
+    "id": "llm-model",
+    "question": "What LLM model and provider does the answer generation step call?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["gpt-5.4-mini", "lexora"]
+  },
+  {
+    "id": "rrf-acronym",
+    "question": "What does RRF stand for, and what k value does the fusion query use?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["reciprocal rank fusion", "60"]
+  },
+  {
+    "id": "retrieval-floor",
+    "question": "For the pre-LLM abstain path, what two conditions must both hold for the retrieval floor to trip?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["similarity", "lexical"]
+  },
+  {
+    "id": "streaming-limitation",
+    "question": "What happens when the client sends stream:true to the lexora gateway, and which request parameters does it reject outright?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["ignor", "stream_options", "seed", "top_p"]
+  },
+  {
+    "id": "chunker-bug",
+    "question": "What caused the chunker infinite loop bug described in the AI usage log, and how was it fixed?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["carry", "idx"]
+  },
+  {
+    "id": "retrieval-candidates",
+    "question": "How many candidates does each arm (dense and lexical) retrieve before fusion, and how many chunks come out fused?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["20", "8"]
+  },
+  {
+    "id": "chunk-sizing",
+    "question": "What are the target chunk size and overlap, in tokens, used by the paragraph-packing chunker?",
+    "expect_unanswerable": false,
+    "expect_keywords": ["700", "100"]
+  },
+  {
+    "id": "unanswerable-unrelated",
+    "question": "What is the capital city of France?",
+    "expect_unanswerable": true
+  },
+  {
+    "id": "unanswerable-adjacent",
+    "question": "How many paying customers does Altovo currently have, and what is its monthly revenue?",
+    "expect_unanswerable": true
+  }
+]

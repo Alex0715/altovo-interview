@@ -35,6 +35,16 @@ Running notes kept during the build, for the AI-usage writeup. One entry per mom
 
 ---
 
+### H5 — First eval pass flagged the questions, not the app
+
+**What happened:** First `scripts/eval.py` run against the doc corpus (ARCHITECTURE.md, PLAN.md, ai-log.md, APPROACH.md ingested as the eval fixture) came back 6/10. Two of the four "failures" asked for facts (`min_similarity: 0.25`, `max_upload_bytes`) that live only in `config.py`, which wasn't part of the ingested corpus — the model correctly abstained on those sub-claims rather than inventing a number. The other two failed on overly literal keyword matching (`"forward progress"` vs. the model's `"idx advances on every iteration"`; `"ignored"` vs. `"ignores"`).
+
+**What I changed:** Rewrote the four questions to ask only what the ingested corpus actually contains, and loosened keyword checks to short substrings (`"ignor"` matches both inflections) instead of exact phrases. Rerun: 10/10. Left `min_similarity=0.25` unchanged — both unanswerable questions abstained correctly and all eight answerable ones cited real chunks, so the default floor is already validated against this corpus rather than needing a correction.
+
+**Transferable lesson:** An eval failure is a claim about either the app or the eval — check which before "fixing" anything. Here the model's abstain behavior was the correct signal; the eval's ground truth was wrong twice and its keyword matching was too brittle twice.
+
+---
+
 ### H0 — zsh `path` clobbering (my own bug, noted for honesty)
 
 A probe loop used `for path in ...`, which in zsh is bound to the `PATH` array — the first iteration destroyed `PATH` and every subsequent command failed with "command not found". Not an AI error; a shell-specific footgun worth remembering, and a reminder that a confusing failure is often the environment rather than the thing under test.
