@@ -166,11 +166,11 @@ If the retrieval floor trips, the sequence short-circuits to `answer` with `abst
 - [x] Error states: provider timeout, empty corpus, failed upload
 
 ### H6 — Docs + submission (1h)
-- [ ] README: local setup, env vars, migration, deploy notes
-- [ ] Reconcile ARCHITECTURE.md with what actually shipped (amend, don't rewrite history)
-- [ ] AI-usage note (from `docs/ai-log.md`, kept during the build)
-- [ ] Self-review / PR description: trade-offs, known weaknesses, next week
-- [ ] Seed the deployed app with 3–4 documents so the link is useful the moment it's opened
+- [x] README: local setup, env vars, migration, deploy notes
+- [x] Reconcile ARCHITECTURE.md with what actually shipped (amend, don't rewrite history)
+- [x] AI-usage note (from `docs/ai-log.md`, kept during the build)
+- [x] Self-review / PR description: trade-offs, known weaknesses, next week
+- [x] Seed the deployed app with 3–4 documents so the link is useful the moment it's opened — Railway already has 4 (this repo's own docs, ingested for the eval set — see `docs/AI_USAGE.md`)
 
 ---
 

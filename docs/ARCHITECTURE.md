@@ -1,7 +1,9 @@
 # Architecture & Design Note
 
 **Project:** Grounded document Q&A — Altovo take-home
-**Status:** written before the build, updated only where reality disagreed
+**Status:** written before the build, updated only where reality disagreed. H0–H5 shipped as
+designed; amendments below are marked inline rather than silently folded in — see `docs/PLAN.md`
+for what's still open and `docs/SELF_REVIEW.md` for trade-offs and known weaknesses.
 **Budget:** 6–8 hours
 
 ---
@@ -134,7 +136,7 @@ Three panes: documents (left), conversation (centre), source viewer (right). Cli
 
 Two independent layers, because one is not enough:
 
-1. **Retrieval floor (pre-LLM).** If the best dense hit is below a similarity threshold *and* the lexical arm returned nothing, the API answers "I couldn't find anything about this in your documents" **without calling the model at all.** Faster, free, and impossible for the model to override. The threshold is empirical and I'll tune it against the eval set — I'll state the number I landed on rather than pretend it's principled.
+1. **Retrieval floor (pre-LLM).** If the best dense hit is below a similarity threshold *and* the lexical arm returned nothing, the API answers "I couldn't find anything about this in your documents" **without calling the model at all.** Faster, free, and impossible for the model to override. **[Amended, H5]** Landed on `min_similarity = 0.25`, validated against `evals/questions.json` rather than picked a priori: both unanswerable questions abstained correctly and all eight answerable ones cited real chunks at that value, so it stayed the default rather than getting tuned further. Still an empirical number for this corpus size and embedding model, not a principled one — see `docs/AI_USAGE.md`.
 2. **Prompt contract (in-LLM).** The system prompt requires abstention when the context is insufficient, with no citations attached. Belt and braces: retrieval can pass the floor and still be irrelevant.
 
 Abstention is rendered visually distinctly from an answer. A hedge that looks like a confident answer is worse than either.
@@ -231,3 +233,9 @@ A small eval set (`evals/questions.json`, ~10 questions) covering:
 - a question containing an exact identifier or acronym (the case that justifies the lexical arm).
 
 The script asserts that expected facts appear in the answer, that citations point at the expected document, and that abstention cases actually abstain. It is not a benchmark. It exists so that "does retrieval still work after I changed the chunker?" has an answer that takes thirty seconds instead of manual clicking.
+
+**[Amended, H5]** Shipped as `scripts/eval.py` against a real corpus (this repo's own `docs/*.md`,
+ingested as the fixture — self-contained and fact-checkable without needing an external document).
+First run: 6/10, but both real failures turned out to be eval bugs (a fact not present in the
+ingested corpus, an over-literal keyword match), not app bugs — see `docs/AI_USAGE.md`. After
+fixing the questions: 10/10. The same four documents are what's seeded on the deployed API.
